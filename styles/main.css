@@ -1,0 +1,111 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eef5ff;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #1e88e5;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    font-size: 1.5em;
+    padding-left: 20px;
+}
+
+.task-form {
+    background: white;
+    padding: 20px;
+    margin: 20px 0 20px 2%;
+    width: 30%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.task-form input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.task-form h2{
+    text-align: left;
+}
+.task-form button {
+    padding: 10px 15px;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 95%;
+}
+
+.task-board {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.task-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+    width: 22%; 
+}
+
+.task-header {
+    background-color: rgba(30, 136, 229, 0.1); 
+    padding: 10px;
+    width: 45%; 
+    text-align: center;
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backlog-header { color: #333; background-color: rgba(51, 51, 51, 0.1); } 
+.process-header { color: #1e88e5; background-color: rgba(30, 136, 229, 0.1); } 
+.done-header { color: #4caf50; background-color: rgba(76, 175, 80, 0.1); } 
+.trash-header { color: #e53935; background-color: rgba(229, 57, 53, 0.1); } 
+
+.task-column {
+
+    width: 100%;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+}
+
+.task-column li {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    text-align: left;
+}
+
+.task-group button {
+    width: 100%;
+    padding: 10px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
