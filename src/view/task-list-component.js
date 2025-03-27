@@ -1,6 +1,4 @@
 import { createElement } from '../framework/render.js';
-import TaskComponent from './task-component.js';
-import { render } from '../framework/render.js';
 
 function createTaskListComponentTemplate() {
   return `<div class="task-group">
@@ -10,9 +8,6 @@ function createTaskListComponentTemplate() {
 }
 
 export default class TaskListComponent {
- 
-  
-
   getTemplate() {
     return createTaskListComponentTemplate(this.title);
   }
@@ -24,12 +19,6 @@ export default class TaskListComponent {
     return this.element;
   }
 
-  renderTasks() {
-    const ulElement = this.getElement().querySelector('.task-column');
-    this.tasks.forEach(task => {
-      render(new TaskComponent(task), ulElement);
-    });
-  }
 
   removeElement() {
     this.element = null;

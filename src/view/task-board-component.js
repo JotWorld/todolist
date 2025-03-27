@@ -1,6 +1,5 @@
 import { createElement } from '../framework/render.js';
-import TaskListComponent from './task-list-component.js';
-import { render } from '../framework/render.js';
+
 
 function createTaskBoardComponentTemplate() {
   return `<section class="task-board"></section>`;
@@ -17,12 +16,6 @@ export default class TaskBoardComponent {
     }
     return this.element;
   }
-
-
-
-
-  
-
   removeElement() {
     this.element = null;
   }
