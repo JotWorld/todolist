@@ -16,10 +16,10 @@ render(taskBoardComponent, bodyContainer);
 
 for (let i = 0; i<4;i++){
     const taskListComponent = new TaskListComponent();
-    render(taskListComponent, taskBoardComponent.getElement());
+    render(taskListComponent, taskBoardComponent.getElement())
 
     for (let j = 0; j < 4; j++) {
-        const taskComponent = new TaskComponent(`Название первой задачи`);
-        render(taskComponent, taskListComponent.getElement().querySelector('.task-column'));
+        const taskComponent = new TaskComponent()
+        render(taskComponent, taskListComponent.getElement().querySelector('.task-column'))
     }
 }
