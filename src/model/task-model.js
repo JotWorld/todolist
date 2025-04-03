@@ -1,12 +1,20 @@
-import { tasks } from '../mock/task.js';
+import { tasks as mockTasks } from '../mock/task.js';
 
 export default class TasksModel {
-    #boardtasks = [...tasks];
-    getTasksByStatus(status) {
-        return this.tasks.filter(task => task.status === status);
-    }
+  #tasks = [...mockTasks];
 
-    deleteAllTrashTasks() {
-        this.tasks = this.tasks.filter(task => task.status !== "trash");
+  getTasks() {
+    return this.#tasks;
+  }
+
+  getTasksByStatus(status) {
+    return this.#tasks.filter(task => task.status === status);
+  }
+
+  updateTaskStatus(taskId, newStatus) {
+    const task = this.#tasks.find(t => t.id === taskId);
+    if (task) {
+      task.status = newStatus;
     }
+  }
 }

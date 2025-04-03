@@ -1,14 +1,14 @@
 import { createElement } from '../framework/render.js';
 
-function createTaskListComponentTemplate(status) {
-  const clearButton = status === "trash" ? `<button class="clear">Очистить</button>`:'';
+function createTaskListComponentTemplate(title, status) {
+  const clearButton = status === "trash" ? `<button class="button">Очистить</button>`:'';
 
     return (
         `
-        <div class="task-list">
-            <h3 class="${status}">${status}</h3>
-            <ul class="tasks-container"></ul>
-            
+        <div class="task-group">
+            <div class="task-header ${status}-header">${title}</div>
+            <ul class="task-column ${status}"></ul>
+            ${clearButton}
         </div>  
 `
       );
@@ -16,11 +16,12 @@ function createTaskListComponentTemplate(status) {
 
 export default class TaskListComponent {
   getTemplate() {
-    return createTaskListComponentTemplate(this.title);
+    return createTaskListComponentTemplate(this.title, this.status);
   }
-  constructor(status){
+  constructor({ title, status }) {
+    this.title = title;
     this.status = status;
-  }
+}
   getElement() {
     if (!this.element) {
       this.element = createElement(this.getTemplate());

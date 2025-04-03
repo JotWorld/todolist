@@ -1,12 +1,15 @@
-export const status = {
-    backlog: "backlog",
-    inprocess: "inprocess",
-    done: "done",
-    trash: "trash"
+const Status = {
+    BACKLOG: `backlog`,
+    PROCESSING: `in-process`,
+    DONE: `done`,
+    TRASH: `trash`,
 };
-const statusLabel = {
-    backlog: "Бэклог",
-    inprocess: "В процессе",
-    done: "Готово",
-    trash: "Корзина"
-}
+
+const StatusLabel = {
+    [Status.BACKLOG]: `Бэклог`,
+    [Status.PROCESSING]: `В процессе`,
+    [Status.DONE]: `Готово`,
+    [Status.TRASH]: `Корзина`,
+};
+
+export {Status, StatusLabel};

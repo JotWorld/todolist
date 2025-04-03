@@ -5,9 +5,9 @@ function createTaskComponentTemplate(task) {
 }
 
 export default class TaskComponent {
-  constructor(task) {
-    this.task = task;
-}
+    constructor(task) {
+        this.task = task;
+    }
 
   getTemplate() {
     return createTaskComponentTemplate(this.task);
