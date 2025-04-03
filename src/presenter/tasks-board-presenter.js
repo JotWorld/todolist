@@ -35,7 +35,6 @@ export default class TasksBoardPresenter {
             
 
             for(let j = 0; j < filteredTasks.length; j++){
-                console.log(filteredTasks[j]);
                 const taskComponent = new TaskComponent(filteredTasks[j].title);
                 render(taskComponent, taskListComponent.querySelector('.task-column'))  
             }
