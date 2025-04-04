@@ -3,6 +3,7 @@ import TaskComponent from "../view/task-component.js";
 import BoardComponent from "../view/task-board-component.js";
 import { render } from "../framework/render.js";
 import {Status, StatusLabel} from "../const/status.js";
+import TrashButton from "../view/trash-button-component.js";
 
 export default class TasksBoardPresenter {
     #boardContainer = null;
@@ -17,12 +18,12 @@ export default class TasksBoardPresenter {
 
     init(){
         this.boardTasks = [...this.#tasksModel.getTasks()];
-        const statues = Object.values(Status);
+        const statuses = Object.values(Status);
 
         render(this.#tasksBoardComponent, this.#boardContainer);
 
-        for(let i = 0;i < statues.length; i++){
-            const currentStatus = statues[i];
+        for(let i = 0;i < statuses.length; i++){
+            const currentStatus = statuses[i];
             const listComponent = new TasksListComponent({
                 title: StatusLabel[currentStatus],
                 status: currentStatus
@@ -37,6 +38,9 @@ export default class TasksBoardPresenter {
             for(let j = 0; j < filteredTasks.length; j++){
                 const taskComponent = new TaskComponent(filteredTasks[j].title);
                 render(taskComponent, taskListComponent.querySelector('.task-column'))  
+            }
+            if(currentStatus == 'trash'){
+                render(new TrashButton(),taskListComponent);
             }
         }
     }
