@@ -76,9 +76,11 @@ export default class TasksBoardPresenter {
       this.#renderTasksList(currentStatus, filteredTasks);
     }
   }
+
   #renderBoard() {
     render(this.#tasksBoardComponent, this.#boardContainer);
   }
+
   #renderTasksList(status, tasks) {
     const listComponent = new TasksListComponent({
       title: StatusLabel[status],
@@ -98,14 +100,18 @@ export default class TasksBoardPresenter {
       this.#renderTrashButton(listComponent.element);
     }
   }
+
   #renderTask(task, container) {
     const taskComponent = new TaskComponent(task);
     render(taskComponent, container);
   }
+
   #renderTrashButton(container) {
     render(new TrashButton(), container);
   }
+
   #renderEmptyList(container){
     render(new EmptyTaskListComponent(), container);
   }
+  
 }
