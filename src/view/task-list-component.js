@@ -1,4 +1,4 @@
-import { createElement } from '../framework/render.js';
+import { AbstractComponent } from '../framework/view/abstract-component.js';
 
 function createTaskListComponentTemplate(title, status) {
 
@@ -12,23 +12,17 @@ function createTaskListComponentTemplate(title, status) {
       );
 }
 
-export default class TaskListComponent {
-  getTemplate() {
-    return createTaskListComponentTemplate(this.title, this.status);
-  }
-  constructor({ title, status }) {
-    this.title = title;
-    this.status = status;
-}
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
+export default class TaskListComponent extends AbstractComponent {
+  #title;
+  #status;
+
+  constructor({title,status}) {
+    super();
+    this.#title = title;
+    this.#status = status;
   }
 
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createTaskListComponentTemplate(this.#title, this.#status);
   }
 }

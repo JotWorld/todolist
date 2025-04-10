@@ -1,5 +1,4 @@
-import { createElement } from '../framework/render.js';
-
+import { AbstractComponent } from '../framework/view/abstract-component.js';
 function createTaskListComponentTemplate() {
     return (
         `
@@ -8,22 +7,10 @@ function createTaskListComponentTemplate() {
       );
 }
 
-export default class TrashButton {
-  getTemplate() {
+export default class ClearTrashButtonComponent extends AbstractComponent {
+
+  get template() {
     return createTaskListComponentTemplate();
   }
-  constructor() {
-    
-}
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
 
-
-  removeElement() {
-    this.element = null;
-  }
 }

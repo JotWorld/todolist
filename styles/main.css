@@ -109,3 +109,11 @@ header {
     cursor: pointer;
     margin-top: 10px;
 }
+li.empty {
+    color: #888;              
+    opacity: 0.6;          
+    font-style: italic;       
+    text-align: center;      
+    padding: 10px;           
+    list-style: none;         
+  }
