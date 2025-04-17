@@ -9,8 +9,18 @@ function createFormAddTaskComponentTemplate() {
           </section>`;
 }
 export default class FormAddTaskComponent extends AbstractComponent {
+  #handleClick = null;
+  constructor({onClick}){
+    super();
+    this.#handleClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler)
+  }
   get template() {
     return createFormAddTaskComponentTemplate();
+  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
   }
 }
 

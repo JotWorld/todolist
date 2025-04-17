@@ -1,16 +1,23 @@
 import { AbstractComponent } from '../framework/view/abstract-component.js';
-function createTaskListComponentTemplate() {
-    return (
-        `
-            <button class="button">Очистить</button>`
 
-      );
+function createClearTrashButtonTemplate() {
+  return `<button class="button"> Очистить</button>`;
 }
 
 export default class ClearTrashButtonComponent extends AbstractComponent {
+  #handleClick;
+  constructor(onClick) {
+    super();
+    this.#handleClick = onClick;
+    this.element.addEventListener('click', this.#clickHandler)
+    };
+  
 
   get template() {
-    return createTaskListComponentTemplate();
+    return createClearTrashButtonTemplate();
+  }  
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
   }
-
 }
