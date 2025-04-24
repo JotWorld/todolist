@@ -13,11 +13,11 @@ export default class TasksModel {
   }
 
   updateTaskStatus(taskId, newStatus) {
-    const task = this.#tasks.find(t => t.id === taskId);
+    const task = this.#tasks.find(t => t.id === Number(taskId));
     if (task) {
       task.status = newStatus;
-    }
-  }
+      this._notifyObservers();
+  }}
   addTask(title){
     const newTask = {
       id: generateID(),

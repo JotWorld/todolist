@@ -36,7 +36,8 @@ export default class TasksBoardPresenter {
   #renderTasksList(status, tasks) {
     const listComponent = new TasksListComponent({
       title: StatusLabel[status],
-      status: status
+      status: status,
+      onTaskDrop: this.#handleTaskDrop.bind(this)
     });
 
     render(listComponent, this.#tasksBoardComponent.element);
@@ -45,7 +46,7 @@ export default class TasksBoardPresenter {
         this.#renderEmptyList(taskColumn);
     }
     for (let j = 0; j < tasks.length; j++) {
-      this.#renderTask(tasks[j].title, taskColumn);
+      this.#renderTask(tasks[j], taskColumn);
     }
 
     if ((status === 'trash') & (tasks.length > 0)) {
@@ -54,7 +55,7 @@ export default class TasksBoardPresenter {
   }
 
   #renderTask(task, container) {
-    const taskComponent = new TaskComponent(task);
+    const taskComponent = new TaskComponent({task});
     render(taskComponent, container);
   }
 
@@ -84,6 +85,9 @@ export default class TasksBoardPresenter {
   }
   #clearBoard(){
     this.#tasksBoardComponent.element.innerHTML = '';
+  }
+  #handleTaskDrop(taskId, newStatus){
+    this.#tasksModel.updateTaskStatus(taskId, newStatus);
   }
   get tasks(){
     return this.#tasksModel.tasks;
