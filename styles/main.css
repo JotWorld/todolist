@@ -117,3 +117,19 @@ li.empty {
     padding: 10px;           
     list-style: none;         
   }
+  .board__no_tasks {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-top: 4rem;
+    font-family: sans-serif;
+    position: relative;
+  }
+  
+  .board__no_tasks::after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    text-align: left;
+  }
+  

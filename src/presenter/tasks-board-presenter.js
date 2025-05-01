@@ -5,12 +5,14 @@ import { render } from "../framework/render.js";
 import { Status, StatusLabel } from "../const/status.js";
 import TrashButton from "../view/trash-button-component.js";
 import EmptyTaskListComponent from "../view/empty-task-list-component.js";
+import { UserAction } from "../const.js";
+import LoadingViewComponent from "../view/loading-view-component.js";
 
 export default class TasksBoardPresenter {
   #boardContainer = null;
   #tasksModel = null;
   #tasksBoardComponent = new BoardComponent();
-  #boardTasks = [];
+  #loadingComponent = new LoadingViewComponent();
 
   constructor({ boardContainer, tasksModel }) {
     this.#boardContainer = boardContainer;
@@ -18,10 +20,15 @@ export default class TasksBoardPresenter {
 
     this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
   }
-  init() {
-    this.#boardTasks = [...this.#tasksModel.tasks];
+  async init() {
+    render(this.#loadingComponent, this.#boardContainer);
+    await this.#tasksModel.init();
+    this.#loadingComponent.element.remove();
+    this.#clearBoard();
     this.#renderBoard();
+  
   }
+ 
 
   #renderBoard() {
     render(this.#tasksBoardComponent, this.#boardContainer);
@@ -70,15 +77,18 @@ export default class TasksBoardPresenter {
   #renderEmptyList(container){
     render(new EmptyTaskListComponent(), container);
   }
-  createTask(){
-    const taskTitle = document.querySelector("input").value.trim();
-    if (!taskTitle){
-      return;
-    }
-    this.#tasksModel.addTask(taskTitle);
-
+async createTask() {
+  const taskTitle = document.querySelector("input").value.trim();
+  if (!taskTitle) return;
+  try{
+    await this.#tasksModel.addTask(taskTitle);
     document.querySelector("input").value = "";
   }
+catch(err){
+  console.error('Ошибка при создании задачи: ', err)
+}
+}
+
   #handleModelChange(){
     this.#clearBoard();
     this.#renderBoard();
@@ -87,9 +97,24 @@ export default class TasksBoardPresenter {
     this.#tasksBoardComponent.element.innerHTML = '';
   }
   #handleTaskDrop(taskId, newStatus, index){
-    this.#tasksModel.moveTaskTo(taskId, newStatus, index);
+    try{
+      this.#tasksModel.moveTaskTo(taskId, newStatus, index);
+      this.#tasksModel.updateTaskStatus(taskId, newStatus);
+    }
+    catch(err){
+        console.error('Ошибка при обновлении статуса задачи:', err)
+    }
   }
-  
+  #handleModelEvent(event, payload){
+    switch(event){
+      case UserAction.ADD_TASK:
+      case UserAction.UPDATE_TASK:
+      case UserAction.DELETE_TASK:
+        this.#clearBoard();
+        this.#renderBoard();
+        break;
+    }
+  }
 
   get tasks(){
     return this.#tasksModel.tasks;

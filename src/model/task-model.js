@@ -1,21 +1,30 @@
-import { tasks as mockTasks } from '../mock/task.js';
+
 import { Status } from '../const/status.js';
 import {generateID} from "../utils.js"
-export default class TasksModel {
-  #tasks = [...mockTasks];
+import Observable from '../framework/observable.js';
+import { UserAction, UpdateType } from '../const.js';
+export default class TasksModel extends Observable{
+  #tasks = []
   #observers = [];
+  #tasksApiService = null;
   get tasks() {
     return this.#tasks;
   }
-
+  constructor({tasksApiService}){
+    super();
+    this.#tasksApiService = tasksApiService;
+    this.#tasksApiService.tasks.then((tasks) => {
+      console.log(tasks);
+    });
+  }
   getTasksByStatus(status) {
     return this.#tasks
       .filter(task => task.status === status)
       .sort((a, b) => a.order - b.order);
   }
   
-  moveTaskTo(taskId, newStatus, newIndex) {
-    const taskIndex = this.#tasks.findIndex(t => t.id === Number(taskId));
+  async moveTaskTo(taskId, newStatus, newIndex) {
+    const taskIndex = this.#tasks.findIndex(t => t.id === taskId);
     if (taskIndex === -1) return;
   
     const [task] = this.#tasks.splice(taskIndex, 1);
@@ -26,43 +35,79 @@ export default class TasksModel {
       .sort((a, b) => a.order - b.order);
   
     tasksOfStatus.splice(newIndex, 0, task);
-    tasksOfStatus.forEach((t, i) => t.order = i); 
+    tasksOfStatus.forEach((t, i) => t.order = i);
   
     const otherTasks = this.#tasks.filter(t => t.status !== newStatus);
     this.#tasks = [...otherTasks, ...tasksOfStatus];
-
-    this._notifyObservers();
+  
+    try {
+      await this.#tasksApiService.updateTask(task);
+      this._notify();
+    } catch (err) {
+      console.error('Ошибка при обновлении задачи на сервере:', err);
+    }
   }
   
+  
 
-  updateTaskStatus(taskId, newStatus) {
+  async updateTaskStatus(taskId, newStatus) {
     const task = this.#tasks.find(t => t.id === Number(taskId));
-    if (task) {
-      task.status = newStatus;
-      this._notifyObservers();
-  }}
-  addTask(title){
+    if (!task) return;
+  
+    const updatedTask = { ...task, status: newStatus };
+  
+    try {
+      const response = await this.#tasksApiService.updateTask(updatedTask);
+      const index = this.#tasks.findIndex(t => t.id === taskId);
+      this.#tasks[index] = response;
+      this._notify(UserAction.UPDATE_TASK, response);
+    } catch (err) {
+      console.error('Ошибка при обновлении задачи:', err);
+    }
+  }
+  
+  async addTask(title) {
     const newTask = {
       id: generateID(),
       title,
-      status: Status.BACKLOG,
+      status: 'backlog',
+      order: this.#tasks.filter(t => t.status === 'backlog').length,
+    };
+  
+    try {
+      const createdTask = await this.#tasksApiService.addTask(newTask);
+      this.#tasks.push(createdTask);
+      this._notify(UserAction.ADD_TASK, createdTask);
+      return createdTask;
+    } catch (err) {
+      console.error('Ошибка при добавлении задачи на сервер:', err);
+      throw err;
     }
-    this.#tasks.push(newTask);
-    this._notifyObservers();
-    return newTask;
   }
-  deleteAllTrashTasks() {
-    this.#tasks = this.#tasks.filter((task) => task.status !== Status.TRASH);
-    this._notifyObservers();
+  async deleteAllTrashTasks() {
+    const trashTasks = this.#tasks.filter(task => task.status === 'trash');
+  
+    try {
+      await Promise.all(trashTasks.map((task) => 
+        this.#tasksApiService.deleteTask(task.id)
+      ));
+  
+      this.#tasks = this.#tasks.filter(task => task.status !== 'trash');
+      this._notify();
+    } catch (err) {
+      console.error('Ошибка при удалении задач из корзины:', err);
+    }
   }
   
-  addObserver(observer){
-      this.#observers.push(observer);
-  }
-  removeObserver(observer){
-    this.#observers = this.#observers.filter((obs) => obs !== observer);
-  }
-  _notifyObservers(){
-    this.#observers.forEach((observer) => observer());
+  
+  async init(){
+    try{
+      const tasks = await this.#tasksApiService.tasks;
+      this.#tasks = tasks;
+    }
+    catch(err){
+        this.#tasks = [];
+    }
+    this._notify(UpdateType.INIT);
   }
 }
