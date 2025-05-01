@@ -20,9 +20,17 @@ export default class TaskComponent extends AbstractComponent {
   }
   #makeTaskDraggable(){
     this.element.setAttribute('draggable', true);
+    this.element.dataset.id = this.#task.id;
+
     this.element.addEventListener('dragstart', (event) =>{
-      event.dataTransfer.setData('text/plain', this.#task.id);
-      
-    })
-  }
+        event.dataTransfer.setData('text/plain', this.#task.id);
+        this.element.classList.add('dragging');
+    });
+
+    this.element.addEventListener('dragend', () => {
+        this.element.classList.remove('dragging');
+    });
+}
+
+
 }

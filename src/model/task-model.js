@@ -9,8 +9,31 @@ export default class TasksModel {
   }
 
   getTasksByStatus(status) {
-    return this.#tasks.filter(task => task.status === status);
+    return this.#tasks
+      .filter(task => task.status === status)
+      .sort((a, b) => a.order - b.order);
   }
+  
+  moveTaskTo(taskId, newStatus, newIndex) {
+    const taskIndex = this.#tasks.findIndex(t => t.id === Number(taskId));
+    if (taskIndex === -1) return;
+  
+    const [task] = this.#tasks.splice(taskIndex, 1);
+    task.status = newStatus;
+  
+    const tasksOfStatus = this.#tasks
+      .filter(t => t.status === newStatus)
+      .sort((a, b) => a.order - b.order);
+  
+    tasksOfStatus.splice(newIndex, 0, task);
+    tasksOfStatus.forEach((t, i) => t.order = i); 
+  
+    const otherTasks = this.#tasks.filter(t => t.status !== newStatus);
+    this.#tasks = [...otherTasks, ...tasksOfStatus];
+
+    this._notifyObservers();
+  }
+  
 
   updateTaskStatus(taskId, newStatus) {
     const task = this.#tasks.find(t => t.id === Number(taskId));

@@ -28,7 +28,7 @@ export default class TasksBoardPresenter {
     const statuses = Object.values(Status);
     for (let i = 0; i < statuses.length; i++) {
       const currentStatus = statuses[i];
-      const filteredTasks = this.tasks.filter((task) => task.status === currentStatus);
+      const filteredTasks = this.#tasksModel.getTasksByStatus(currentStatus);
       this.#renderTasksList(currentStatus, filteredTasks);
     }
   }
@@ -86,9 +86,11 @@ export default class TasksBoardPresenter {
   #clearBoard(){
     this.#tasksBoardComponent.element.innerHTML = '';
   }
-  #handleTaskDrop(taskId, newStatus){
-    this.#tasksModel.updateTaskStatus(taskId, newStatus);
+  #handleTaskDrop(taskId, newStatus, index){
+    this.#tasksModel.moveTaskTo(taskId, newStatus, index);
   }
+  
+
   get tasks(){
     return this.#tasksModel.tasks;
   }
