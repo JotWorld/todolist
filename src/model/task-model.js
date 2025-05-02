@@ -14,7 +14,6 @@ export default class TasksModel extends Observable{
     super();
     this.#tasksApiService = tasksApiService;
     this.#tasksApiService.tasks.then((tasks) => {
-      console.log(tasks);
     });
   }
   getTasksByStatus(status) {
